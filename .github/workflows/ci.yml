@@ -1,12 +1,17 @@
-name: CI with E2E
+name: CI — matrix builds + E2E
 on: [push, pull_request]
 jobs:
   build:
-    uses: ./.github/workflows/python-build.yml # calls the reusable workflow
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"] # ← one job per version
+      fail-fast: false # ← see every combo, don't cancel on first fail
+    uses: ./.github/workflows/python-build.yml
     with:
-      python-version: "3.11"
+      python-version: ${{ matrix.python-version }}
+
   e2e:
-    needs: build # only runs if build passed
+    needs: build # ← waits for ALL matrix runs to finish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -15,5 +20,5 @@ jobs:
           python-version: "3.11"
       - run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.txt   # ← REQUIRED, or the e2e test can't import requests
       - run: pytest tests/e2e -q
