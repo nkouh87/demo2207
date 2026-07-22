@@ -1,0 +1,27 @@
+name: Flaky Test Collector
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  flaky:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run flaky test but continue
+        id: flaky
+        continue-on-error: true
+        run: ./scripts/run_flaky_test.sh
+
+      - name: Report flaky outcome
+        run: |
+          echo "outcome    = ${{ steps.flaky.outcome }}"
+          echo "conclusion = ${{ steps.flaky.conclusion }}"
+          if [ "${{ steps.flaky.outcome }}" = "failure" ]; then
+            echo "Flaky test FAILED this run"
+          else
+            echo "Flaky test passed"
+          fi
