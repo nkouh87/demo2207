@@ -22,5 +22,5 @@ jobs:
           aws-region: us-east-1
       - name: Who am I?
         run: aws sts get-caller-identity
-      - name: List files in zt-contract bucket
-        run: aws s3 ls s3://zt-contract/
+      - name: List files in nyc-taxi-lab-nasi bucket
+        run: aws s3 ls s3://nyc-taxi-lab-nasi/
