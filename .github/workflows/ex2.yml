@@ -1,0 +1,14 @@
+name: Deploy Only Main
+
+on:
+  push:
+
+jobs:
+  deploy-only-main:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show branch
+        run: |
+          echo "Ref = $GITHUB_REF"
+          echo "Deploying from main branch"
